@@ -245,4 +245,52 @@ router.post(
       .catch(err => console.log(err));
   }
 );
+
+// @route   DELETE /api/profile/experience/:exp_id
+// @desc    Delete education from profile
+// @access  Private
+router.delete(
+  '/experience/:exp_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        // Get remove index
+        const experiencesWithoutDeleted = profile.experience.filter(
+          item => item.id !== req.params.exp_id
+        );
+        profile.experience = experiencesWithoutDeleted;
+
+        profile
+          .save()
+          .then(profile => res.json(profile))
+          .catch(err => res.status(404).json(err));
+      })
+      .catch(err => console.log(err));
+  }
+);
+
+// @route   DELETE /api/profile/education/:exp_id
+// @desc    Delete education from profile
+// @access  Private
+router.delete(
+  '/education/:exp_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        // Get remove index
+        const educationWithoutDeleted = profile.education.filter(
+          item => item.id !== req.params.exp_id
+        );
+        profile.education = educationWithoutDeleted;
+
+        profile
+          .save()
+          .then(profile => res.json(profile))
+          .catch(err => res.status(404).json(err));
+      })
+      .catch(err => console.log(err));
+  }
+);
 module.exports = router;
